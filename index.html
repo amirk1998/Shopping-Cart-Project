@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shopping Cart Project</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+      integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <section class="cart-center">
+      <div class="backdrop"></div>
+
+      <div class="cart">
+        <h3 class="cart-content">Your Cart</h3>
+        <div class="cart-item">
+          <img
+            src="./img/product-2.jpeg"
+            alt="product-2"
+            class="cart-item-img"
+          />
+
+          <div class="cart-item-desc">
+            <h4>Product title</h4>
+            <h5>$ 12.99</h5>
+          </div>
+
+          <div class="cart-item-controller">
+            <i class="fa-solid fa-chevron-up"></i>
+            <p>1</p>
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="cart-footer">
+        <span class="cart-total">total price : 90$ </span>
+        <button class="btn clear-cart" aria-label="clear-cart">
+          clear cart
+        </button>
+        <button class="btn cart-item-confirm">confirm</button>
+      </div>
+    </section>
+
+    <script src="./app/js/app.js"></script>
+    <script src="./app/js/modal.js"></script>
+  </body>
+</html>
