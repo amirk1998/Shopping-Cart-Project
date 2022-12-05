@@ -1,4 +1,5 @@
-//TODO : Episode 100
+//TODO : E 101 => 17min
+//FIX : Style of modal
 // APP JS
 const cartBtn = document.querySelector('.cart-btn');
 const cartModal = document.querySelector('.cart');
@@ -6,6 +7,9 @@ const backDrop = document.querySelector('.backdrop');
 const closeModal = document.querySelector('.cart-item-confirm');
 
 const productsDOM = document.querySelector('.products-center');
+const cartTotal = document.querySelector('.cart-total');
+const cartItems = document.querySelector('.cart-items');
+const cartContent = document.querySelector('.cart-content');
 
 import { productsData } from './products.js';
 let cart = [];
@@ -66,16 +70,60 @@ class UI {
         event.target.disabled = true;
         console.log(event.target.dataset.id);
         //get product from product
-        const addedProducts = Storage.getProduct(id);
+        const addedProducts = { ...Storage.getProduct(id), quantity: 1 };
         //add to cart
 
-        cart = [...cart, { ...addedProducts, quantity: 1 }];
-        //save cart to local storage
+        cart = [...cart, addedProducts];
+        // save cart to local storage
         Storage.saveCart(cart);
-        //update cart value
-        //add to cart item
+        // update cart value
+        this.setCartValue(cart);
+        // add to cart item
+        this.addCartItem(addedProducts);
+        // get cart items from local storage
       });
     });
+  }
+
+  setCartValue(cart) {
+    //1.cart items
+    //2.cart total price
+    let tempCartItems = 0;
+    const totalPrice = cart.reduce((acc, curr) => {
+      tempCartItems += curr.quantity;
+      return acc + curr.quantity * curr.price;
+    }, 0);
+
+    cartTotal.innerText = `total price : ${totalPrice.toFixed(2)} $`;
+    cartItems.innerText = tempCartItems;
+    // console.log(tempCartItems);
+  }
+
+  addCartItem(cartItem) {
+    //
+    const divItem = document.createElement('div');
+    divItem.classList.add('cart-item');
+    divItem.innerHTML = `<img class="cart-item-img" src=${cartItem.imageUrl} />
+    <div class="cart-item-desc">
+      <h4>${cartItem.title}</h4>
+      <h5>$ ${cartItem.price}</h5>
+    </div>
+    <div class="cart-item-conteoller">
+      <i class="fas fa-chevron-up"></i>
+      <p>${cartItem.quantity}</p>
+      <i class="fas fa-chevron-down"></i>
+      </div>
+      <i class="fa-regular fa-trash-can"></i>`;
+    cartContent.appendChild(divItem);
+  }
+
+  setupApp() {
+    // get cart from storage
+    const cartStorage = Storage.getCart() || [];
+    //add cart item
+    cartStorage.forEach((cartItem) => this.addCartItem(cartItem));
+    //set value : price and items
+    this.setCartValue(cartStorage);
   }
 }
 
@@ -94,6 +142,10 @@ class Storage {
     //
     localStorage.setItem('cart', JSON.stringify(cart));
   }
+
+  static getCart() {
+    return JSON.parse(localStorage.getItem('cart'));
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -102,8 +154,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const productsData = products.getProduct();
   // console.log(productsData);
   const ui = new UI();
+  //set up : get cart and set up app:
+  ui.setupApp();
   ui.displayProducts(productsData);
-
   ui.getAddToCartBtn();
   Storage.saveProducts(productsData);
 });

@@ -140,6 +140,17 @@ body {
   border-radius: 8px;
   cursor: pointer;
 }
+
+.btn:hover {
+  background: var(--primaryColor);
+  color: var(--secondaryColor);
+}
+
+.btn:disabled {
+  cursor: default;
+  background: var(--secondaryColor);
+  color: var(--primaryColor);
+}
 /* ---------------End of Products ---------------- */
 
 /* Cart */
@@ -238,6 +249,10 @@ body {
   background-color: var(--mainWhite);
   border: 1px solid var(--primaryColor);
   margin-right: 10px;
+}
+
+.fa-trash-can {
+  cursor: pointer;
 }
 
 @media (max-width: 600px) {
