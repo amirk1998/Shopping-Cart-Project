@@ -1,4 +1,6 @@
 *.txt
+Text/
 assets/fonts/svg
 assets/fonts/eot
 assets/fonts/ttf
+.vscode/
