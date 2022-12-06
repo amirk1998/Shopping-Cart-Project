@@ -1,4 +1,4 @@
-//TODO : E 103
+//TODO : E 104
 //FIX : Style of modal
 // APP JS
 const cartBtn = document.querySelector('.cart-btn');
@@ -11,6 +11,7 @@ const cartTotal = document.querySelector('.cart-total');
 const cartItems = document.querySelector('.cart-items');
 const cartContent = document.querySelector('.cart-content');
 const clearCart = document.querySelector('.clear-cart');
+const quantityClass = document.querySelector('.quantity');
 
 let buttonsDOM = [];
 
@@ -117,7 +118,7 @@ class UI {
     </div>
     <div class="cart-item-conteoller">
       <i class="fas fa-chevron-up" data-id=${cartItem.id} </i>
-      <p>${cartItem.quantity}</p>
+      <p class="quantity">${cartItem.quantity}</p>
       <i class="fas fa-chevron-down" data-id=${cartItem.id} ></i>
     </div>
     <i class="fa-regular fa-trash-can" data-id=${cartItem.id} ></i>  `;
@@ -135,6 +136,28 @@ class UI {
 
   cartLogic() {
     clearCart.addEventListener('click', () => this.clearCart());
+
+    //cart content funtionality
+    cartContent.addEventListener('click', (event) => {
+      // console.log(event.target.classList);
+      if (event.target.classList.contains('fa-chevron-up')) {
+        const addQuantity = event.target;
+        //1. get item from cart
+        //2. save cart
+        //3. update cart value
+        const addedItem = cart.find(
+          (item) => item.id == addQuantity.dataset.id
+        );
+        addedItem.quantity++;
+        this.setCartValue(cart);
+        Storage.saveCart(cart);
+        console.log(addedItem.quantity);
+        //TODO : FIX quantity increase
+
+        // addQuantity.nextElementSibling.innerText = addedItem.quantity;
+        // quantityClass.innerText = `${addedItem.quantity}`;
+      }
+    });
   }
 
   clearCart() {
