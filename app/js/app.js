@@ -64,7 +64,7 @@ class UI {
     buttons.forEach((btn) => {
       const id = btn.dataset.id;
       // check if the product id is in cart or not
-      const isInCart = cart.find((item) => item.id === parseInt(id));
+      const isInCart = cart.find((item) => parseInt(item.id) === parseInt(id));
 
       if (isInCart) {
         btn.innerText = 'In Cart';
