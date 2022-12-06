@@ -112,18 +112,18 @@ class UI {
       <i class="fas fa-chevron-up"></i>
       <p>${cartItem.quantity}</p>
       <i class="fas fa-chevron-down"></i>
-      </div>
-      <i class="fa-regular fa-trash-can"></i>`;
+    </div>
+    <i class="fa-regular fa-trash-can"></i>  `;
     cartContent.appendChild(divItem);
   }
 
   setupApp() {
     // get cart from storage
-    const cartStorage = Storage.getCart() || [];
+    cart = Storage.getCart() || [];
     //add cart item
-    cartStorage.forEach((cartItem) => this.addCartItem(cartItem));
+    cart.forEach((cartItem) => this.addCartItem(cartItem));
     //set value : price and items
-    this.setCartValue(cartStorage);
+    this.setCartValue(cart);
   }
 }
 
