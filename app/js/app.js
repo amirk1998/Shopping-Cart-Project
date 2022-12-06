@@ -1,4 +1,4 @@
-//TODO : E 101 => 17min
+//TODO : E 103
 //FIX : Style of modal
 // APP JS
 const cartBtn = document.querySelector('.cart-btn');
@@ -10,9 +10,13 @@ const productsDOM = document.querySelector('.products-center');
 const cartTotal = document.querySelector('.cart-total');
 const cartItems = document.querySelector('.cart-items');
 const cartContent = document.querySelector('.cart-content');
+const clearCart = document.querySelector('.clear-cart');
+
+let buttonsDOM = [];
 
 import { productsData } from './products.js';
 let cart = [];
+// console.log(cart.length);
 
 // get products
 class Products {
@@ -51,6 +55,9 @@ class UI {
   getAddToCartBtn() {
     //create NodeList
     const addToCartBtns = document.querySelectorAll('.add-to-cart');
+
+    buttonsDOM = [...addToCartBtns];
+    //
     //convert NodeList to Array
     const buttons = [...addToCartBtns];
     // console.log(buttons);
@@ -68,7 +75,7 @@ class UI {
         //
         event.target.innerText = 'In Cart';
         event.target.disabled = true;
-        console.log(event.target.dataset.id);
+        // console.log(event.target.dataset.id);
         //get product from product
         const addedProducts = { ...Storage.getProduct(id), quantity: 1 };
         //add to cart
@@ -109,11 +116,11 @@ class UI {
       <h5>$ ${cartItem.price}</h5>
     </div>
     <div class="cart-item-conteoller">
-      <i class="fas fa-chevron-up"></i>
+      <i class="fas fa-chevron-up" data-id=${cartItem.id} </i>
       <p>${cartItem.quantity}</p>
-      <i class="fas fa-chevron-down"></i>
+      <i class="fas fa-chevron-down" data-id=${cartItem.id} ></i>
     </div>
-    <i class="fa-regular fa-trash-can"></i>  `;
+    <i class="fa-regular fa-trash-can" data-id=${cartItem.id} ></i>  `;
     cartContent.appendChild(divItem);
   }
 
@@ -124,6 +131,43 @@ class UI {
     cart.forEach((cartItem) => this.addCartItem(cartItem));
     //set value : price and items
     this.setCartValue(cart);
+  }
+
+  cartLogic() {
+    clearCart.addEventListener('click', () => this.clearCart());
+  }
+
+  clearCart() {
+    // clear cart :
+
+    // remove : (DRY=> Don't Repeat Yourself )
+    cart.forEach((item) => this.removeItem(item.id));
+
+    //remove cart content children
+    while (cartContent.children.length) {
+      cartContent.removeChild(cartContent.children[0]);
+    }
+    closeModalFunction();
+  }
+
+  removeItem(id) {
+    //update cart
+    cart = cart.filter((item) => item.id !== id);
+    // total price and items
+    this.setCartValue(cart);
+    //update storage
+    Storage.saveCart(cart);
+    //get add to cart btn => update text and disable
+    this.getSingleBtn(id);
+  }
+
+  getSingleBtn(id) {
+    const button = buttonsDOM.find(
+      (btn) => parseInt(btn.dataset.id) === parseInt(id)
+    );
+    button.innerHTML = `<i class="fas fa-shopping-cart"></i>
+    add to cart`;
+    button.disabled = false;
   }
 }
 
@@ -158,6 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
   ui.setupApp();
   ui.displayProducts(productsData);
   ui.getAddToCartBtn();
+  ui.cartLogic();
   Storage.saveProducts(productsData);
 });
 
