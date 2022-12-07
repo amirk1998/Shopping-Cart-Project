@@ -11,7 +11,6 @@ const cartTotal = document.querySelector('.cart-total');
 const cartItems = document.querySelector('.cart-items');
 const cartContent = document.querySelector('.cart-content');
 const clearCart = document.querySelector('.clear-cart');
-const quantityClass = document.querySelector('.quantity');
 
 let buttonsDOM = [];
 
@@ -117,8 +116,8 @@ class UI {
       <h5>$ ${cartItem.price}</h5>
     </div>
     <div class="cart-item-conteoller">
-      <i class="fas fa-chevron-up" data-id=${cartItem.id} </i>
-      <p class="quantity">${cartItem.quantity}</p>
+      <i class="fas fa-chevron-up" data-id=${cartItem.id}></i>
+      <p>${cartItem.quantity}</p>
       <i class="fas fa-chevron-down" data-id=${cartItem.id} ></i>
     </div>
     <i class="fa-regular fa-trash-can" data-id=${cartItem.id} ></i>  `;
@@ -143,19 +142,48 @@ class UI {
       if (event.target.classList.contains('fa-chevron-up')) {
         const addQuantity = event.target;
         //1. get item from cart
-        //2. save cart
-        //3. update cart value
         const addedItem = cart.find(
           (item) => item.id == addQuantity.dataset.id
         );
         addedItem.quantity++;
+        //2. update cart value
         this.setCartValue(cart);
+        //3. save cart
         Storage.saveCart(cart);
-        console.log(addedItem.quantity);
-        //TODO : FIX quantity increase
+        //4. update cart item in UI
+        addQuantity.nextElementSibling.innerText = addedItem.quantity;
+      } else if (event.target.classList.contains('fa-trash-can')) {
+        const removeItem = event.target;
+        // remove from cartItem
+        const _removedItem = cart.find(
+          (item) => item.id == removeItem.dataset.id
+        );
+        // remove method => removeItem(id)
+        this.removeItem(_removedItem.id);
+        // update Storage
+        Storage.saveCart(cart);
+        // remove item in UI
+        cartContent.removeChild(removeItem.parentElement);
+      } else if (event.target.classList.contains('fa-chevron-down')) {
+        //
+        const subQuantity = event.target;
+        // remove from cartItem
+        const substractedItem = cart.find(
+          (item) => item.id == subQuantity.dataset.id
+        );
+        if (substractedItem.quantity === 1) {
+          this.removeItem(substractedItem.id);
+          cartContent.removeChild(subQuantity.parentElement.parentElement);
+          return;
+        }
 
-        // addQuantity.nextElementSibling.innerText = addedItem.quantity;
-        // quantityClass.innerText = `${addedItem.quantity}`;
+        substractedItem.quantity--;
+        //2. update cart value
+        this.setCartValue(cart);
+        //3. save cart
+        Storage.saveCart(cart);
+        //4. update cart item in UI
+        subQuantity.previousElementSibling.innerText = substractedItem.quantity;
       }
     });
   }
